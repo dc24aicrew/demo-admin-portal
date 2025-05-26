@@ -35,10 +35,25 @@ axiosInstance.interceptors.response.use(
     return response
   },
   (error: AxiosError) => {
+    // Handle authentication errors (401 Unauthorized)
+    if (error.response?.status === 401 && 
+        // Don't redirect on login/logout/verify endpoints
+        !error.config?.url?.includes('/auth/')) {
+      // Clear auth data on unauthorized errors
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('auth_user')
+      
+      // Redirect to login page if we're in browser environment
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login'
+      }
+    }
+    
     const apiError: ApiError = {
       message: error.message || 'Unknown error occurred',
       code: error.code,
       details: error.response?.data,
+      status: error.response?.status,
     }
 
     return Promise.reject(apiError)
