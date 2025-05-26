@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { Ticket } from '@/types/tickets'
 import { ticketService } from '@/services/tickets'
 
 export function useTickets() {
-  const [tickets, setTickets] = useState<Ticket[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -38,7 +36,6 @@ export function useTickets() {
   }
 
   return {
-    tickets,
     loading,
     error,
     searchTicket,

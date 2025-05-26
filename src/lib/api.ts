@@ -1,5 +1,5 @@
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
-import { ApiError } from '@/types/api'
+import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
+import type { ApiError } from '@/types/api'
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -14,10 +14,11 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('auth_token')
-    
+
     if (token) {
-      config.headers.Authorization = `******    }
-    
+      config.headers.Authorization = `Bearer ${token}`
+    }
+
     return config
   },
   (error) => {
@@ -36,7 +37,7 @@ axiosInstance.interceptors.response.use(
       code: error.code,
       details: error.response?.data,
     }
-    
+
     return Promise.reject(apiError)
   }
 )
@@ -45,16 +46,26 @@ export const api = {
   get: <T>(url: string, config?: AxiosRequestConfig) => {
     return axiosInstance.get<T>(url, config).then((response) => response.data)
   },
-  
-  post: <T>(url: string, data?: any, config?: AxiosRequestConfig) => {
-    return axiosInstance.post<T>(url, data, config).then((response) => response.data)
+
+  post: <T, D = unknown>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig
+  ) => {
+    return axiosInstance
+      .post<T>(url, data, config)
+      .then((response) => response.data)
   },
-  
-  put: <T>(url: string, data?: any, config?: AxiosRequestConfig) => {
-    return axiosInstance.put<T>(url, data, config).then((response) => response.data)
+
+  put: <T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig) => {
+    return axiosInstance
+      .put<T>(url, data, config)
+      .then((response) => response.data)
   },
-  
+
   delete: <T>(url: string, config?: AxiosRequestConfig) => {
-    return axiosInstance.delete<T>(url, config).then((response) => response.data)
+    return axiosInstance
+      .delete<T>(url, config)
+      .then((response) => response.data)
   },
 }
