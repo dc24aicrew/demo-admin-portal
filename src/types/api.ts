@@ -2,6 +2,7 @@ export interface ApiError {
   message: string
   code?: string
   details?: any
+  status?: number
 }
 
 export interface ApiResponse<T> {

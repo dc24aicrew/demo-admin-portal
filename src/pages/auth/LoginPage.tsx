@@ -5,15 +5,28 @@ import { authService } from '@/services/auth'
 import Layout from '@/components/Layout'
 import Button from '@/components/ui/Button'
 
+// Demo credentials for easy login
+const DEMO_CREDENTIALS = {
+  username: 'demo_admin',
+  password: 'demo123',
+}
+
 function LoginPage() {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, isAuthenticated } = useAuth()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   })
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,6 +48,10 @@ function LoginPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const applyDemoCredentials = () => {
+    setFormData(DEMO_CREDENTIALS)
   }
 
   return (
@@ -99,6 +116,38 @@ function LoginPage() {
                 <Button type="submit" fullWidth isLoading={loading}>
                   Sign in
                 </Button>
+              </div>
+
+              <div className="mt-4">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="bg-white px-2 text-gray-500">
+                      Demo Access
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-4">
+                  <button
+                    type="button"
+                    onClick={applyDemoCredentials}
+                    className="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                  >
+                    Use Demo Credentials
+                  </button>
+                </div>
+
+                <div className="mt-2 text-center text-xs text-gray-600">
+                  <span className="block">
+                    Demo Username: {DEMO_CREDENTIALS.username}
+                  </span>
+                  <span className="block">
+                    Demo Password: {DEMO_CREDENTIALS.password}
+                  </span>
+                </div>
               </div>
             </form>
           </div>
