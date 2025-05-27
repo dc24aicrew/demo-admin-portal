@@ -8,8 +8,8 @@ import type { ApiError } from '@/types/api'
 
 // Demo credentials for easy login
 const DEMO_CREDENTIALS = {
-  username: 'admin', // Updated to match the actual API response
-  password: 'demo123', // Keeping the same password assuming it's correct
+  username: 'admin',
+  password: 'admin123',
 }
 
 function LoginPage() {

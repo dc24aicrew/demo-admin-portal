@@ -44,7 +44,7 @@ export const authService = {
     localStorage.removeItem('auth_token')
   },
   verifyToken: async (): Promise<User> => {
-    const response = await api.get<{ username: string; roles: string }>(
+    const response = await api.post<{ username: string; roles: string }>(
       '/auth/verify'
     )
 
