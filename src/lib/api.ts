@@ -38,7 +38,15 @@ axiosInstance.interceptors.response.use(
     // Handle authentication errors (401 Unauthorized)
     if (error.response?.status === 401 && 
         // Don't redirect on login/logout/verify endpoints
-        !error.config?.url?.includes('/auth/')) {
+        (() => {
+          try {
+            const url = new URL(error.config?.url || '', apiUrl);
+            const allowedPaths = ['/auth/login', '/auth/logout', '/auth/verify'];
+            return !allowedPaths.includes(url.pathname);
+          } catch {
+            return true; // Default to redirecting if URL parsing fails
+          }
+        })()) {
       // Clear auth data on unauthorized errors
       localStorage.removeItem('auth_token')
       localStorage.removeItem('auth_user')
