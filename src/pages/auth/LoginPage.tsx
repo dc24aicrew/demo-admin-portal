@@ -140,8 +140,12 @@ function LoginPage() {
                 </div>
 
                 <div className="mt-2 text-center text-xs text-gray-600">
-                  <span className="block">Demo Username: {DEMO_CREDENTIALS.username}</span>
-                  <span className="block">Demo Password: {DEMO_CREDENTIALS.password}</span>
+                  <span className="block">
+                    Demo Username: {DEMO_CREDENTIALS.username}
+                  </span>
+                  <span className="block">
+                    Demo Password: {DEMO_CREDENTIALS.password}
+                  </span>
                 </div>
               </div>
             </form>
@@ -151,7 +155,5 @@ function LoginPage() {
     </Layout>
   )
 }
-
-export default LoginPage
 
 export default LoginPage
