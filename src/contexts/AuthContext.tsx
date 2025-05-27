@@ -24,37 +24,33 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Try to restore session on mount
+  // Verify token on app initialization
   useEffect(() => {
-    const initAuth = async () => {
+    const verifyAuth = async () => {
       try {
-        const storedUser = localStorage.getItem(USER_STORAGE_KEY)
+        // Check if token exists in localStorage
         const token = localStorage.getItem('auth_token')
-        
-        if (storedUser && token) {
-          // If we have both user data and token, verify the token
-          try {
-            await authService.verifyToken()
-            setUser(JSON.parse(storedUser))
-          } catch (error) {
-            // If token verification fails, clear storage
-            localStorage.removeItem(USER_STORAGE_KEY)
-            localStorage.removeItem('auth_token')
-          }
+        if (token) {
+          // Verify the token and get user data
+          const userData = await authService.verifyToken()
+          setUser(userData)
         }
       } catch (error) {
-        console.error('Failed to initialize auth:', error)
+        console.error('Authentication verification failed:', error)
+        // Clear invalid token
+        localStorage.removeItem('auth_token')
       } finally {
         setLoading(false)
       }
     }
 
-    initAuth()
+    verifyAuth()
   }, [])
 
   const login = (userData: User) => {
     setUser(userData)
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData))
+    // Note: token should already be stored by authService.login
   }
 
   const logout = () => {

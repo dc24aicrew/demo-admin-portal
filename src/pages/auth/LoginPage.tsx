@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { authService } from '@/services/auth'
 import Layout from '@/components/Layout'
 import Button from '@/components/ui/Button'
+import type { ApiError } from '@/types/api'
 
 // Demo credentials for easy login
 const DEMO_CREDENTIALS = {
-  username: 'demo_admin',
-  password: 'demo123',
+  username: 'admin',
+  password: 'admin123',
 }
 
 function LoginPage() {
@@ -20,9 +21,8 @@ function LoginPage() {
     username: '',
     password: '',
   })
-
   // Redirect if already authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       navigate('/')
     }
@@ -38,7 +38,8 @@ function LoginPage() {
       login(user)
       navigate('/')
     } catch (err) {
-      setError('Invalid username or password')
+      const apiError = err as ApiError
+      setError(apiError.message || 'Invalid username or password')
       console.error(err)
     } finally {
       setLoading(false)
