@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { authService } from '@/services/auth'
 import Layout from '@/components/Layout'
 import Button from '@/components/ui/Button'
+import type { ApiError } from '@/types/api'
 
 // Demo credentials for easy login
 const DEMO_CREDENTIALS = {
@@ -38,7 +39,8 @@ function LoginPage() {
       login(user)
       navigate('/')
     } catch (err) {
-      setError('Invalid username or password')
+      const apiError = err as ApiError
+      setError(apiError.message || 'Invalid username or password')
       console.error(err)
     } finally {
       setLoading(false)
@@ -156,5 +158,7 @@ function LoginPage() {
     </Layout>
   )
 }
+
+export default LoginPage
 
 export default LoginPage
