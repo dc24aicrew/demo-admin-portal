@@ -9,7 +9,6 @@ interface AuthContextType {
   loading: boolean
   login: (user: User) => void
   logout: () => void
-  loading: boolean
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
@@ -51,6 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = (userData: User) => {
     setUser(userData)
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData))
+    // Note: token should already be stored by authService.login
   }
 
   const logout = () => {
@@ -58,7 +58,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     localStorage.removeItem(USER_STORAGE_KEY)
     localStorage.removeItem('auth_token')
     setUser(null)
-    localStorage.removeItem('auth_token')
   }
 
   const value = {
@@ -67,7 +66,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     loading,
     login,
     logout,
-    loading,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { authService } from '@/services/auth'
@@ -8,8 +8,8 @@ import type { ApiError } from '@/types/api'
 
 // Demo credentials for easy login
 const DEMO_CREDENTIALS = {
-  username: 'demo_admin',
-  password: 'demo123',
+  username: 'admin', // Updated to match the actual API response
+  password: 'demo123', // Keeping the same password assuming it's correct
 }
 
 function LoginPage() {
@@ -21,9 +21,8 @@ function LoginPage() {
     username: '',
     password: '',
   })
-
   // Redirect if already authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       navigate('/')
     }

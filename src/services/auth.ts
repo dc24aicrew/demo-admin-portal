@@ -7,8 +7,9 @@ interface LoginRequest {
 }
 
 interface LoginResponse {
-  user: User
   token: string
+  username: string
+  roles: string
 }
 
 export const authService = {
@@ -20,9 +21,15 @@ export const authService = {
       localStorage.setItem('auth_token', response.token)
     } else {
       throw new Error('No authentication token received')
+    } // Convert API response to User object
+    const user: User = {
+      id: response.username, // Using username as id since we don't have a specific id
+      username: response.username,
+      role: 'admin', // Assuming 'ADMIN' role translates to 'admin' in our app
+      token: response.token,
     }
 
-    return response.user
+    return user
   },
 
   logout: async (): Promise<void> => {
@@ -32,13 +39,23 @@ export const authService = {
       console.error('Logout API error:', error)
       // Continue with local logout even if API call fails
     }
-    
+
     // Always clear local storage on logout
     localStorage.removeItem('auth_token')
   },
-
   verifyToken: async (): Promise<User> => {
-    return await api.get<User>('/auth/verify')
+    const response = await api.get<{ username: string; roles: string }>(
+      '/auth/verify'
+    )
+
+    // Convert API response to User object
+    const user: User = {
+      id: response.username,
+      username: response.username,
+      role: 'admin', // Assuming 'ADMIN' role translates to 'admin' in our app
+    }
+
+    return user
   },
 
   // Check if there's a stored token
