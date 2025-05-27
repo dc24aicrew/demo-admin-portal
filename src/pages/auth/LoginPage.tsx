@@ -22,10 +22,11 @@ function LoginPage() {
   })
 
   // Redirect if already authenticated
-  if (isAuthenticated) {
-    navigate('/')
-    return null
-  }
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/')
+    }
+  }, [isAuthenticated, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
