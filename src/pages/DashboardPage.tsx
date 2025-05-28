@@ -2,11 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 import Layout from '@/components/Layout'
 import Button from '@/components/ui/Button'
 import { useTickets } from '@/hooks/useTickets'
-import type { SearchResponse } from '@/types/tickets'
+import type { Ticket } from '@/types/tickets'
 
 function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchResult, setSearchResult] = useState<SearchResponse | null>(null)
+  const [searchResult, setSearchResult] = useState<Ticket[] | null>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const { searchTicket, loading, error } = useTickets()
 
@@ -81,7 +81,7 @@ function DashboardPage() {
               Search Result
             </h3>
 
-            {searchResult.ticket ? (
+            {searchResult.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200 rounded-md">
                   <thead className="bg-gray-50">
@@ -104,29 +104,29 @@ function DashboardPage() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    <tr>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {searchResult.ticket.ticketCode}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                        {searchResult.ticket.eventName}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                        {searchResult.ticket.attendeeName}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span
-                          className={`px-3 py-1 rounded-full ${getStatusColor(searchResult.ticket.status)}`}
-                        >
-                          {searchResult.ticket.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                        {new Date(
-                          searchResult.ticket.purchaseDate
-                        ).toLocaleDateString()}
-                      </td>
-                    </tr>
+                    {searchResult.map((ticket) => (
+                      <tr key={ticket.id}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {ticket.code}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          {ticket.eventId}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          {ticket.attendeeName}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                          <span
+                            className={`px-3 py-1 rounded-full ${getStatusColor(ticket.status)}`}
+                          >
+                            {ticket.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          {new Date(ticket.purchaseDate).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -135,11 +135,6 @@ function DashboardPage() {
                 <p className="text-yellow-700">
                   No ticket found matching that code.
                 </p>
-                {searchResult.message && (
-                  <p className="text-sm text-yellow-600">
-                    {searchResult.message}
-                  </p>
-                )}
               </div>
             )}
           </div>

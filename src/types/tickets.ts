@@ -1,12 +1,12 @@
 export interface Ticket {
   id: string
-  ticketCode: string
+  code: string
   eventId: string
-  eventName: string
   attendeeName: string
   status: 'ACTIVE' | 'USED'
   purchaseDate: string
-  lastUpdated: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface Event {

@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { ticketService } from '@/services/tickets'
+import type { Ticket } from '@/types/tickets'
 
 export function useTickets() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const searchTicket = async (code: string) => {
+  const searchTicket = async (code: string): Promise<Ticket[] | null> => {
     try {
       setLoading(true)
       setError(null)
