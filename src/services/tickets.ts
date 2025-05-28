@@ -11,6 +11,6 @@ export const ticketService = {
   },
 
   updateTicketStatus: async (id: string, status: string): Promise<Ticket> => {
-    return await api.put<Ticket>(`/tickets/${id}/status`, { status })
+    return await api.patch<Ticket>(`/tickets/${id}/status`, { status })
   },
 }

@@ -21,7 +21,10 @@ export function useTickets() {
     }
   }
 
-  const updateTicketStatus = async (id: string, status: string) => {
+  const updateTicketStatus = async (
+    id: string,
+    status: string
+  ): Promise<boolean> => {
     try {
       setLoading(true)
       setError(null)
