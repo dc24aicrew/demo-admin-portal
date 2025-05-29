@@ -17,7 +17,7 @@ export const ticketService = {
     console.log(`[TicketService] Payload:`, { status })
 
     try {
-      const result = await api.put<Ticket>(url, { status })
+      const result = await api.patch<Ticket>(url, { status })
       console.log(`[TicketService] Success:`, result)
       return result
     } catch (error) {
