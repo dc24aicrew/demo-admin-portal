@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import Button from '@/components/ui/Button'
 import { useTickets } from '@/hooks/useTickets'
@@ -101,6 +102,9 @@ function DashboardPage() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Purchase Date
                       </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -124,6 +128,14 @@ function DashboardPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                           {new Date(ticket.purchaseDate).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          <Link
+                            to={`/tickets/${ticket.id}`}
+                            className="text-primary-600 hover:text-primary-900"
+                          >
+                            View Details
+                          </Link>
                         </td>
                       </tr>
                     ))}

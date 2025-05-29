@@ -21,15 +21,49 @@ export function useTickets() {
     }
   }
 
-  const updateTicketStatus = async (id: string, status: string) => {
+  const updateTicketStatus = async (
+    id: string,
+    status: string
+  ): Promise<boolean> => {
     try {
       setLoading(true)
       setError(null)
       await ticketService.updateTicketStatus(id, status)
       return true
-    } catch (err) {
-      setError('Failed to update ticket status')
-      console.error(err)
+    } catch (err: unknown) {
+      console.error('Update ticket status error:', err)
+
+      // Provide more specific error messages
+      let errorMessage = 'Failed to update ticket status'
+
+      // Type guard for error with status property
+      if (typeof err === 'object' && err !== null) {
+        const error = err as {
+          status?: number
+          code?: string
+          message?: string
+        }
+
+        if (error.status === 404) {
+          errorMessage = 'Ticket not found'
+        } else if (error.status === 401) {
+          errorMessage = 'Authentication required'
+        } else if (error.status === 403) {
+          errorMessage = 'Permission denied'
+        } else if (error.status === 500) {
+          errorMessage = 'Server error occurred'
+        } else if (
+          error.code === 'NETWORK_ERROR' ||
+          (error.message && error.message.includes('Network Error'))
+        ) {
+          errorMessage =
+            'Network connection failed. Please check if the server is running.'
+        } else if (error.message) {
+          errorMessage = `Error: ${error.message}`
+        }
+      }
+
+      setError(errorMessage)
       return false
     } finally {
       setLoading(false)

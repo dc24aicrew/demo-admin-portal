@@ -11,6 +11,18 @@ export const ticketService = {
   },
 
   updateTicketStatus: async (id: string, status: string): Promise<Ticket> => {
-    return await api.put<Ticket>(`/tickets/${id}/status`, { status })
+    console.log(`[TicketService] Updating ticket ${id} status to ${status}`)
+    const url = `/tickets/${id}/status`
+    console.log(`[TicketService] API URL: ${url}`)
+    console.log(`[TicketService] Payload:`, { status })
+
+    try {
+      const result = await api.patch<Ticket>(url, { status })
+      console.log(`[TicketService] Success:`, result)
+      return result
+    } catch (error) {
+      console.error(`[TicketService] Failed to update ticket status:`, error)
+      throw error
+    }
   },
 }
