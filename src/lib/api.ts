@@ -1,4 +1,8 @@
-import axios, { AxiosError, type AxiosRequestConfig } from 'axios'
+import axios, {
+  AxiosError,
+  type AxiosRequestConfig,
+  type AxiosRequestHeaders,
+} from 'axios'
 import type { ApiError } from '@/types/api'
 
 const apiUrl = import.meta.env.VITE_API_URL
@@ -16,7 +20,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem('auth_token')
 
     if (!config.headers) {
-      config.headers = {}
+      config.headers = {} as AxiosRequestHeaders
     }
     if (token) {
       config.headers.Authorization = `Bearer ${token}`

@@ -38,6 +38,7 @@ function TicketDetailPage() {
 
     // Determine the new status (toggle between ACTIVE and USED)
     const newStatus = ticket.status === 'ACTIVE' ? 'USED' : 'ACTIVE'
+    const originalStatus = ticket.status
 
     // Optimistic update
     setTicket((prev) => (prev ? { ...prev, status: newStatus } : null))
@@ -53,7 +54,7 @@ function TicketDetailPage() {
       }, 3000)
     } else {
       // Revert optimistic update if failed
-      setTicket((prev) => (prev ? { ...prev, status: ticket.status } : null))
+      setTicket((prev) => (prev ? { ...prev, status: originalStatus } : null))
     }
   }
 
